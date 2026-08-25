@@ -1,0 +1,22 @@
+[
+    {
+        "country": "Norway",
+        "year": "2025",
+        "gdp": "86500"
+    },
+    {
+        "country": "Sweden",
+        "year": "2025",
+        "gdp": "57000"
+    },
+    {
+        "country": "Norway",
+        "year": "2024",
+        "gdp": null
+    },
+    {
+        "country": "Sweden",
+        "year": "error",
+        "gdp": "56000"
+    }
+]
