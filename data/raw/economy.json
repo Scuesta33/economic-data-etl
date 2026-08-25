@@ -18,5 +18,10 @@
         "country": "Sweden",
         "year": "error",
         "gdp": "56000"
+    },
+    {
+        "country": "Denmark",
+        "year": "2025",
+        "gdp": "71000"
     }
 ]
