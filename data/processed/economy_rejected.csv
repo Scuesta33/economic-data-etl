@@ -1,0 +1,3 @@
+country,year,gdp,error
+Norway,2024,,falta gdp
+Sweden,error,56000,year o gdp no tienen un formato válido
