@@ -1,0 +1,32 @@
+[
+    {
+        "plant": "Hitra",
+        "date": "2026-08-20",
+        "tons": "125.5",
+        "quality": "A"
+    },
+    {
+        "plant": "Hitra",
+        "date": "2026-08-21",
+        "tons": null,
+        "quality": "A"
+    },
+    {
+        "plant": "Froya",
+        "date": "2026-08-20",
+        "tons": "98.7",
+        "quality": "B"
+    },
+    {
+        "plant": "Froya",
+        "date": "2026-08-21",
+        "tons": "ERROR",
+        "quality": "A"
+    },
+    {
+        "plant": "Aukra",
+        "date": "2026-08-20",
+        "tons": "110.2",
+        "quality": null
+    }
+]
