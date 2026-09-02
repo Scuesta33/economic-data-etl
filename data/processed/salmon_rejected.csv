@@ -1,0 +1,4 @@
+plant,date,tons,quality,error
+Hitra,2026-08-21,,A,falta tons
+Froya,2026-08-21,ERROR,A,tons no tiene formato valido
+Aukra,2026-08-20,110.2,,falta quality
