@@ -13,10 +13,12 @@ conexion = psycopg.connect(
 
 print("Conexión realizada correctamente")
 cursor = conexion.cursor(row_factory=dict_row)
+nombre = "HITRA"
+cursor.execute("SELECT * FROM plantas WHERE nombre = %s;",
+               (nombre,)
+               )
 
-cursor.execute("SELECT * FROM plantas;")
+planta = cursor.fetchone()
 
-resultados = cursor.fetchall()
+print(f"Planta: {planta['nombre']} - Pais: {planta['pais']}")
 
-for planta in resultados:
-    print(f"Planta: {planta['nombre']} - Capacidad: {planta['capacidad']}")
