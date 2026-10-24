@@ -21,7 +21,22 @@ def conectar_db():
         password=password
     )
     return conexion
+
+def guardar_planta(conexion, id, nombre, pais, capacidad):
+    cursor = conexion.cursor()
+    cursor.execute(
+        """
+        INSERT INTO plantas (id, nombre, pais, capacidad)
+        VALUES (%s, %s, %s, %s)
+        ON CONFLICT (id) DO UPDATE
+        SET capacidad = EXCLUDED.capacidad;
+        """,
+        (id, nombre, pais, capacidad)
+    )
+
 conexion = conectar_db()
+
+guardar_planta(conexion, 5, "BERGEN", "NORWAY", 250)
 
 print("Conexión realizada correctamente")
 cursor = conexion.cursor(row_factory=dict_row)
