@@ -2,23 +2,31 @@ import os
 import psycopg
 from psycopg.rows import dict_row
 
-password = os.getenv("DB_PASSWORD")
+def buscar_planta(cursor, nombre):
+    cursor.execute(
+        "SELECT * FROM plantas WHERE nombre = %s;",
+        (nombre,)
+    )
 
-conexion = psycopg.connect(
-    host="localhost",
-    dbname="salmon_data",
-    user="postgres",
-    password=password
-)
+    planta = cursor.fetchone()
+    return planta
+
+def conectar_db():
+    password = os.getenv("DB_PASSWORD")
+
+    conexion = psycopg.connect(
+        host="localhost",
+        dbname="salmon_data",
+        user="postgres",
+        password=password
+    )
+    return conexion
+conexion = conectar_db()
 
 print("Conexión realizada correctamente")
 cursor = conexion.cursor(row_factory=dict_row)
-nombre = "HITRA"
-cursor.execute("SELECT * FROM plantas WHERE nombre = %s;",
-               (nombre,)
-               )
-
-planta = cursor.fetchone()
+nombre = "FROYA"
+planta = buscar_planta(cursor, nombre)
 
 if planta is None:
     print("La planta no existe")
@@ -51,3 +59,4 @@ cursor.execute(
 planta = cursor.fetchone()
 
 print(f"Planta: {planta['nombre']} - Capacidad: {planta['capacidad']}")
+
