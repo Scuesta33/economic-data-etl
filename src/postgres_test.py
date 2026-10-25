@@ -33,10 +33,12 @@ def guardar_planta(conexion, id, nombre, pais, capacidad):
         """,
         (id, nombre, pais, capacidad)
     )
+    conexion.commit()
 
 conexion = conectar_db()
 
 guardar_planta(conexion, 5, "BERGEN", "NORWAY", 250)
+guardar_planta(conexion, 4, "TRONDHEIM", "NORWAY", 250)
 
 print("Conexión realizada correctamente")
 cursor = conexion.cursor(row_factory=dict_row)
@@ -49,22 +51,9 @@ else:
     print(f"Planta: {planta['nombre']} - Pais: {planta['pais']}")
 
 
-# NUEVO EJERCICIO: INSERTAR UNA PLANTA
+# COMPROBAR DATOS GUARDADOS
 
-nombre = "TRONDHEIM"
-pais = "NORWAY"
-capacidad = 250
 
-cursor.execute(
-    """
-    INSERT INTO plantas (id, nombre, pais, capacidad)
-    VALUES (%s, %s, %s, %s)
-    ON CONFLICT (id) DO UPDATE
-    SET capacidad = EXCLUDED.capacidad;
-    """,
-    (4, nombre, pais, capacidad)
-)
-conexion.commit()
 
 cursor.execute(
     "SELECT * FROM plantas WHERE id = %s;",
@@ -75,3 +64,11 @@ planta = cursor.fetchone()
 
 print(f"Planta: {planta['nombre']} - Capacidad: {planta['capacidad']}")
 
+planta = buscar_planta(cursor, "BERGEN")
+
+if planta is None:
+    print("BERGEN no existe")
+else:
+    print(f"Planta: {planta['nombre']} - Capacidad: {planta['capacidad']}")
+
+conexion.close()
