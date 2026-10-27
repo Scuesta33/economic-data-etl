@@ -1,13 +1,13 @@
 import json
 import csv
+import os
+import psycopg
 
 def extraer_datos():
     with open("data/raw/salmon_production.json", "r", encoding="utf-8") as archivo:
         datos = json.load(archivo)
     return datos
 
-datos = extraer_datos()
-print(datos)
 
 def limpiar_registro(registro):
     plant = registro.get("plant")
@@ -75,9 +75,46 @@ def guardar_salmon_rechazados(datos):
             writer.writeheader()
             writer.writerows(datos)
 
+def guardar_salmon_postgres(datos):
+    password = os.getenv("DB_PASSWORD")
+
+    # 1. Abrimos la conexión
+    conexion = psycopg.connect(
+        host="localhost",
+        dbname="salmon_data",
+        user="postgres",
+        password=password
+    )
+
+    # 2. Creamos el cursor
+    cursor = conexion.cursor()
+
+    # 3. Recorremos los registros
+    for registro in datos:
+
+        # Buscamos el ID de la planta
+        cursor.execute(
+            "SELECT id FROM plantas WHERE nombre = %s;",
+            (registro["planta"],)
+        )
+
+        planta = cursor.fetchone()
+
+        if planta is None:
+            print(f"Planta desconocida: {registro['planta']}")
+            continue
+
+        planta_id = planta[0]
+
+        print(f"Planta: {registro['planta']} - ID: {planta_id}")
+
+    conexion.close()
+
+
 datos = extraer_datos()
 datos_limpios, datos_rechazados = transformar_datos(datos)
 print(datos_limpios)
 print(datos_rechazados)
 guardar_salmon_csv(datos_limpios)
 guardar_salmon_rechazados(datos_rechazados)
+guardar_salmon_postgres(datos_limpios)
