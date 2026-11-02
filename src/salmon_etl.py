@@ -107,7 +107,26 @@ def guardar_salmon_postgres(datos):
         planta_id = planta[0]
 
         print(f"Planta: {registro['planta']} - ID: {planta_id}")
-
+        cursor.execute(
+            """
+            INSERT INTO salmon_production
+                (planta, fecha, toneladas, calidad, planta_id)
+            VALUES (%s, %s, %s, %s, %s)
+            ON CONFLICT (planta, fecha)
+            DO UPDATE SET
+                toneladas = EXCLUDED.toneladas,
+                calidad = EXCLUDED.calidad,
+                planta_id = EXCLUDED.planta_id;
+            """,
+            (
+                registro["planta"],
+                registro["fecha"],
+                registro["toneladas"],
+                registro["calidad"],
+                planta_id
+            )
+        )
+    conexion.commit()
     conexion.close()
 
 
