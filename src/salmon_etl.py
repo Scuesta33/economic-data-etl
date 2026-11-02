@@ -130,10 +130,13 @@ def guardar_salmon_postgres(datos):
     conexion.close()
 
 
-datos = extraer_datos()
-datos_limpios, datos_rechazados = transformar_datos(datos)
-print(datos_limpios)
-print(datos_rechazados)
-guardar_salmon_csv(datos_limpios)
-guardar_salmon_rechazados(datos_rechazados)
-guardar_salmon_postgres(datos_limpios)
+if __name__ == "__main__":
+    datos = extraer_datos()
+    datos_limpios, datos_rechazados = transformar_datos(datos)
+
+    print(datos_limpios)
+    print(datos_rechazados)
+
+    guardar_salmon_csv(datos_limpios)
+    guardar_salmon_rechazados(datos_rechazados)
+    guardar_salmon_postgres(datos_limpios)
