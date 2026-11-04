@@ -2,6 +2,7 @@ import json
 import csv
 import os
 import psycopg
+import math
 
 def extraer_datos():
     with open("data/raw/salmon_production.json", "r", encoding="utf-8") as archivo:
@@ -29,6 +30,11 @@ def limpiar_registro(registro):
         toneladas = float(tons)
     except ValueError:
         return None, "tons no tiene formato valido"
+    if toneladas < 0:
+        return None, "toneladas negativas"
+
+    if not math.isfinite(toneladas):
+        return None, "toneladas no finitas"
 
     
     resultado = {

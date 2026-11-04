@@ -67,3 +67,29 @@ def test_tranformar_datos():
     assert len(rechazados) == 1
     assert limpios[0]["planta"] == "HITRA"
     assert rechazados[0]["error"] == "tons no tiene formato valido"
+
+def test_toneladas_negativas():
+    registro = {
+        "plant": "Hitra",
+        "date": "2026-08-20",
+        "tons": "-150",
+        "quality": "A"
+    }
+
+    limpio, error = limpiar_registro(registro)
+
+    assert limpio is None
+    assert error == "toneladas negativas"
+
+def test_toneladas_nan():
+    registro = {
+        "plant": "Hitra",
+        "date": "2026-08-20",
+        "tons": "NaN",
+        "quality": "A"
+    }
+
+    limpio, error = limpiar_registro(registro)
+
+    assert limpio is None
+    assert error == "toneladas no finitas"
