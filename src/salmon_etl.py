@@ -3,6 +3,12 @@ import csv
 import os
 import psycopg
 import math
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 def extraer_datos():
     with open("data/raw/salmon_production.json", "r", encoding="utf-8") as archivo:
@@ -136,13 +142,20 @@ def guardar_salmon_postgres(datos):
     conexion.close()
 
 
-if __name__ == "__main__":
+def main():
     datos = extraer_datos()
-    datos_limpios, datos_rechazados = transformar_datos(datos)
 
-    print(datos_limpios)
-    print(datos_rechazados)
+    datos_limpios, datos_rechazados = transformar_datos(datos)
 
     guardar_salmon_csv(datos_limpios)
     guardar_salmon_rechazados(datos_rechazados)
+
     guardar_salmon_postgres(datos_limpios)
+
+    logging.info("ETL ejecutado correctamente")
+    print(f"Registros válidos: {len(datos_limpios)}")
+    print(f"Registros rechazados: {len(datos_rechazados)}")
+
+
+if __name__ == "__main__":
+    main()
