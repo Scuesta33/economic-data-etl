@@ -101,7 +101,6 @@ def guardar_salmon_postgres(datos):
         logging.error("No se ha configurado DB_PASSWORD")
         raise ValueError("Falta la contraseña de PostgreSQL")
 
-
     # 1. Abrimos la conexión
     conexion = psycopg.connect(
         host="localhost",
@@ -110,49 +109,61 @@ def guardar_salmon_postgres(datos):
         password=password
     )
 
-    # 2. Creamos el cursor
-    cursor = conexion.cursor()
+    try:
+        # 2. Creamos el cursor
+        cursor = conexion.cursor()
 
-    # 3. Recorremos los registros
-    for registro in datos:
+        # 3. Recorremos los registros
+        for registro in datos:
 
-        # Buscamos el ID de la planta
-        cursor.execute(
-            "SELECT id FROM plantas WHERE nombre = %s;",
-            (registro["planta"],)
-        )
-
-        planta = cursor.fetchone()
-
-        if planta is None:
-            print(f"Planta desconocida: {registro['planta']}")
-            continue
-
-        planta_id = planta[0]
-
-        print(f"Planta: {registro['planta']} - ID: {planta_id}")
-        cursor.execute(
-            """
-            INSERT INTO salmon_production
-                (planta, fecha, toneladas, calidad, planta_id)
-            VALUES (%s, %s, %s, %s, %s)
-            ON CONFLICT (planta, fecha)
-            DO UPDATE SET
-                toneladas = EXCLUDED.toneladas,
-                calidad = EXCLUDED.calidad,
-                planta_id = EXCLUDED.planta_id;
-            """,
-            (
-                registro["planta"],
-                registro["fecha"],
-                registro["toneladas"],
-                registro["calidad"],
-                planta_id
+            # Buscamos el ID de la planta
+            cursor.execute(
+                "SELECT id FROM plantas WHERE nombre = %s;",
+                (registro["planta"],)
             )
-        )
-    conexion.commit()
-    conexion.close()
 
+            planta = cursor.fetchone()
+
+            if planta is None:
+                logging.warning(
+                    "Planta desconocida: %s",
+                    registro["planta"]
+                )
+                continue
+
+            planta_id = planta[0]
+
+            # Guardamos o actualizamos la producción
+            cursor.execute(
+                """
+                INSERT INTO salmon_production
+                    (planta, fecha, toneladas, calidad, planta_id)
+                VALUES (%s, %s, %s, %s, %s)
+                ON CONFLICT (planta, fecha)
+                DO UPDATE SET
+                    toneladas = EXCLUDED.toneladas,
+                    calidad = EXCLUDED.calidad,
+                    planta_id = EXCLUDED.planta_id;
+                """,
+                (
+                    registro["planta"],
+                    registro["fecha"],
+                    registro["toneladas"],
+                    registro["calidad"],
+                    planta_id
+                )
+            )
+
+        conexion.commit()
+        logging.info("Datos guardados correctamente en PostgreSQL")
+
+    except psycopg.Error:
+        conexion.rollback()
+        logging.exception("Error durante la operación con PostgreSQL")
+        raise
+
+    finally:
+        conexion.close()
 
 def main():
     datos = extraer_datos()
@@ -167,7 +178,9 @@ def main():
     logging.info("ETL ejecutado correctamente")
     print(f"Registros válidos: {len(datos_limpios)}")
     print(f"Registros rechazados: {len(datos_rechazados)}")
+    
 
 
 if __name__ == "__main__":
     main()
+    

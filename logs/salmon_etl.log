@@ -7,3 +7,9 @@
 2026-11-08 18:06:04,345 - WARNING - Registro rechazado: {'plant': 'Froya', 'date': '2026-08-21', 'tons': 'ERROR', 'quality': 'A'} | Motivo: tons no tiene formato valido
 2026-11-08 18:06:04,345 - WARNING - Registro rechazado: {'plant': 'Aukra', 'date': '2026-08-20', 'tons': '110.2', 'quality': None} | Motivo: falta quality
 2026-11-08 18:06:04,413 - INFO - ETL ejecutado correctamente
+2026-11-08 18:16:17,141 - WARNING - Registro rechazado: {'plant': 'Hitra', 'date': '2026-08-21', 'tons': None, 'quality': 'A'} | Motivo: falta tons
+2026-11-08 18:16:17,141 - WARNING - Registro rechazado: {'plant': 'Froya', 'date': '2026-08-21', 'tons': 'ERROR', 'quality': 'A'} | Motivo: tons no tiene formato valido
+2026-11-08 18:16:17,141 - WARNING - Registro rechazado: {'plant': 'Aukra', 'date': '2026-08-20', 'tons': '110.2', 'quality': None} | Motivo: falta quality
+2026-11-08 18:16:17,226 - INFO - ETL ejecutado correctamente
+2026-11-08 18:16:17,237 - ERROR - No se pudo convertir el texto a número
+2026-11-08 18:16:17,237 - INFO - Prueba de errores finalizada
