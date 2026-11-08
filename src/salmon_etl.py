@@ -7,7 +7,11 @@ import logging
 
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s"
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler("logs/salmon_etl.log", encoding="utf-8"),
+        logging.StreamHandler()
+    ]
 )
 
 def extraer_datos():
@@ -57,8 +61,11 @@ def transformar_datos(datos):
         limpio, error = limpiar_registro(registro)
 
         if limpio is None:
-            print("Registro rechazado:", registro)
-            print("Motivo:", error)
+            logging.warning(
+                "Registro rechazado: %s | Motivo: %s",
+                registro,
+                error
+            )
 
             rechazo = {
                 "plant": registro.get("plant"),
@@ -89,6 +96,11 @@ def guardar_salmon_rechazados(datos):
 
 def guardar_salmon_postgres(datos):
     password = os.getenv("DB_PASSWORD")
+
+    if not password:
+        logging.error("No se ha configurado DB_PASSWORD")
+        raise ValueError("Falta la contraseña de PostgreSQL")
+
 
     # 1. Abrimos la conexión
     conexion = psycopg.connect(
