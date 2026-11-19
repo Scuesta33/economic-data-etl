@@ -153,7 +153,7 @@ def guardar_salmon_postgres(datos):
                     planta_id
                 )
             )
-
+        
         conexion.commit()
         logging.info("Datos guardados correctamente en PostgreSQL")
 
