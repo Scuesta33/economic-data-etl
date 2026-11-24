@@ -104,6 +104,7 @@ def guardar_salmon_postgres(datos):
     # 1. Abrimos la conexión
     conexion = psycopg.connect(
         host="localhost",
+        port=5433,
         dbname="salmon_data",
         user="postgres",
         password=password

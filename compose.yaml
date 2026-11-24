@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: salmon_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Configura DB_PASSWORD}
+      POSTGRES_DB: salmon_data
+    ports:
+      - "5433:5432"
+    volumes:
+      - salmon_postgres_data:/var/lib/postgresql
+
+volumes:
+  salmon_postgres_data:
